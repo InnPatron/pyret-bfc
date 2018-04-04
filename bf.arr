@@ -1,7 +1,7 @@
 import file("tokens.arr") as T
 
 data VM:
-  | vm-exec(instr, cells)
+  | vm-exec(instr :: State, cells :: State)
   | vm-end(cells)
 end
 
