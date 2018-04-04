@@ -21,6 +21,24 @@ fun get-current(s :: State):
   end
 end
 
+fun step(vm):
+  cases(VM) vm:
+    | vm-exec(instr, cells) => 
+      curr-instr = get-current(instr)
+      cases(option) curr-instr:
+        | some(t) => handle-instruction(vm, t)
+
+        | none =>
+          if is-end(instr) == false:
+            vm-exec(shift-r(instr), cells)
+          else:
+            vm-end(cells)
+          end
+      end
+    | vm-end(_) => vm
+  end
+end
+
 fun handle-instruction(vm, t):
   cases(VM) vm:
     | vm-exec(instr, cells) =>
