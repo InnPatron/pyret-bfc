@@ -23,7 +23,7 @@ fun step(vm :: VM) -> VM:
             vm-end(cells)
           end
       end
-    | vm-end(_) => vm
+    | vm-end(cells) => vm-end(cells)
   end
 where:
   initial = vm-exec(
