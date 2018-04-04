@@ -94,7 +94,7 @@ where:
   get-current(base) is 100
 end
 
-fun jump-forward-to-closed(s):
+fun jump-forward-to-closed(s :: State<T.Token>) -> State<T.Token>:
   next-state = shift-r(s)
   if get-current(next-state) == some(T.BracketClosed):
     next-state
@@ -103,7 +103,7 @@ fun jump-forward-to-closed(s):
   end
 end
 
-fun jump-backward-to-open(s):
+fun jump-backward-to-open(s :: State<T.Token>) -> State<T.Token>:
   next-state = shift-l(s)
   if get-current(next-state) == some(T.BracketOpen):
     next-state
