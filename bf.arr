@@ -16,6 +16,11 @@ fun handle-instruction(s, t):
     | AngleBracketClosed => shift-r(s)
     | Plus => apply-to-current(lam(c): c + 1 end)
     | Minus => apply-to-current(lam(c): c - 1 end)
+    | Dot =>
+      block:
+        print(get-current(s))
+        s
+      end
     | else => s
   end
 end
