@@ -9,18 +9,6 @@ data State:
   | state(tape-left, current, tape-right)
 end
 
-fun is-end(s :: State):
-  cases(State) s:
-    | state(_, _, tr) => tr.length() == 0
-  end
-end
-
-fun get-current(s :: State):
-  cases(State) s:
-    | state(_, c, _) => c
-  end
-end
-
 fun step(vm):
   cases(VM) vm:
     | vm-exec(instr, cells) => 
@@ -70,6 +58,18 @@ fun handle-instruction(vm, t):
       end
 
     | vm-end(_) => vm
+  end
+end
+
+fun is-end(s :: State):
+  cases(State) s:
+    | state(_, _, tr) => tr.length() == 0
+  end
+end
+
+fun get-current(s :: State):
+  cases(State) s:
+    | state(_, c, _) => c
   end
 end
 
