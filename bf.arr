@@ -25,16 +25,6 @@ fun step(vm) -> VM:
       end
     | vm-end(_) => vm
   end
-
-where:
-  initial = vm-exec(
-              state(empty, T.Plus, [list: T.Plus]),
-              state(empty, 0, repeat(0, 99))
-            )
-
-  next = step(initial)
-
-  current-cell(next) is 1
 end
 
 fun handle-instruction(vm :: VM, t :: T.Token) -> VM:
@@ -144,4 +134,15 @@ check:
                          some(4), 
                          [list: some(5)])
   shift-r(shift-r(shift-r(base))) raises "shift right beyond tape"
+end
+
+check:
+  initial = vm-exec(
+              state(empty, T.Plus, [list: T.Plus]),
+              state(empty, 0, repeat(0, 99))
+            )
+
+  next = step(initial)
+
+  current-cell(next) is 1
 end
