@@ -35,7 +35,7 @@ end
 fun shift-l(old-state :: VM) -> VM:
   cases(VM) old-state:
     | state(tape-left, current, tape-right) =>
-      cases(List<option<T.Tokens>>) tape-left:
+      cases(List) tape-left:
         | link(f, r) => 
           state(r, f, link(current, tape-right))
         | empty => raise("shift left beyond tape")
@@ -46,7 +46,7 @@ end
 fun shift-r(old-state :: VM) -> VM:
   cases(VM) old-state:
     | state(tape-left, current, tape-right) =>
-      cases(List<option<T.Tokens>>) tape-right:
+      cases(List) tape-right:
         | link(f, r) => 
           state(link(current, tape-left), f, r)
         | empty => raise("shift right beyond tape")
