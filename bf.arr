@@ -12,16 +12,6 @@ fun handle-instruction(s, t):
   end
 end
 
-fun step(s :: VM) -> VM:
-  cases(option) s:
-    | state(tl, c, tr) =>
-    cases(option) c:
-      | some(t) => handle-instruction(s, t)
-      | none => raise("Attempting to execute bad character")
-    end
-  end
-end
-
 fun shift-l(old-state :: VM) -> VM:
   cases(VM) old-state:
     | state(tape-left, current, tape-right) =>
