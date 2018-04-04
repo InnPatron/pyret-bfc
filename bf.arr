@@ -18,7 +18,7 @@ fun handle-instruction(s, t):
   end
 end
 
-fun apply-to-cell(s :: VM, f) -> VM:
+fun apply-to-current(s :: VM, f) -> VM:
   cases(VM) s:
     | state(tl, c, tr) => state(tl, f(c), tr)
   end
