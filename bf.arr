@@ -61,6 +61,13 @@ fun handle-instruction(vm, t):
   end
 end
 
+fun current-cell(vm):
+  cases(VM) vm:
+    | vm-exec(_, cells) => get-current(cells)
+    | vm-end(cells) => get-current(cells)
+  end
+end
+
 fun is-end(s :: State):
   cases(State) s:
     | state(_, _, tr) => tr.length() == 0
