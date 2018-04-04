@@ -57,7 +57,7 @@ fun handle-instruction(vm :: VM, t :: T.Token) -> VM:
         vm-end(new-cells)
       else:
 
-        new-instr = cases(T.Tokens) t:
+        new-instr = cases(T.Token) t:
           | BracketOpen => shift-r(jump-forward-to-closed(instr))
           | BracketClosed => shift-r(jump-backward-to-open(instr))
           | else => shift-r(instr)
