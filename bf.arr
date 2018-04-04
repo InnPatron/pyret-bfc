@@ -1,11 +1,18 @@
 import file("tokens.arr") as T
 
 data VM:
-  | vm-state(instr, cells)
+  | vm-exec(instr, cells)
+  | vm-end(cells)
 end
 
 data State:
   | state(tape-left, current, tape-right)
+end
+
+fun is-end(s :: State):
+  cases(State) s:
+    | state(_, _, tr) => tr.length() == 0
+  end
 end
 
 fun get-current(s :: State):
@@ -16,7 +23,7 @@ end
 
 fun handle-instruction(vm, t):
   cases(VM) vm:
-    | vm-state(instr, cells) =>
+    | vm-exec(instr, cells) =>
       new-cells = cases(T.Tokens) t:
         | AngleBracketOpen => shift-l(cells)
         | AngleBracketClosed => shift-r(cells)
@@ -31,7 +38,38 @@ fun handle-instruction(vm, t):
         | else => cells 
       end
 
-    vm-state(shift-l(instr), new-cells)
+      if is-end(instr):
+        vm-end(new-cells)
+      else:
+
+        new-instr = cases(T.Tokens) t:
+          | BracketOpen => shift-r(jump-forward-to-closed(instr))
+          | BracketClosed => shift-r(jump-backward-to-open(instr))
+          | else => shift-r(instr)
+        end
+
+        vm-exec(new-instr, new-cells)
+      end
+
+    | vm-end(_) => vm
+  end
+end
+
+fun jump-forward-to-closed(s):
+  next-state = shift-r(s)
+  if get-current(next-state) == some(T.BracketClosed):
+    next-state
+  else:
+    jump-forward-to-closed(next-state)
+  end
+end
+
+fun jump-backward-to-open(s):
+  next-state = shift-l(s)
+  if get-current(next-state) == some(T.BracketOpen):
+    next-state
+  else:
+    jump-backward-to-open(next-state)
   end
 end
 
