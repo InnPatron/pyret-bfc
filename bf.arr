@@ -4,6 +4,12 @@ data VM:
   | state(tape-left, current, tape-right)
 end
 
+fun get-current(s :: VM):
+  cases(VM) s:
+    | state(_, c, _) => c
+  end
+end
+
 fun handle-instruction(s, t):
   cases(T.Tokens) t:
     | AngleBracketOpen => shift-l(s)
