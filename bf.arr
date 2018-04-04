@@ -21,6 +21,7 @@ fun handle-instruction(s, t):
         print(get-current(s))
         s
       end
+    | Comma => raise("no i/o")
     | else => s
   end
 end
