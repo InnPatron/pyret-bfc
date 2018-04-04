@@ -12,7 +12,7 @@ fun handle-instruction(s, t):
   end
 end
 
-fun step(s):
+fun step(s :: VM) -> VM:
   cases(option) s:
     | state(tl, c, tr) =>
     cases(option) c:
@@ -22,24 +22,24 @@ fun step(s):
   end
 end
 
-fun shift-l(old-state):
+fun shift-l(old-state :: VM) -> VM:
   cases(VM) old-state:
     | state(tape-left, current, tape-right) =>
-      cases(List) tape-left:
+      cases(List<option<T.Tokens>>) tape-left:
         | link(f, r) => 
-          some(state(r, f, link(current, tape-right)))
-        | empty => none
+          state(r, f, link(current, tape-right))
+        | empty => raise("shift left beyond tape")
       end
   end
 end
 
-fun shift-r(old-state):
+fun shift-r(old-state :: VM) -> VM:
   cases(VM) old-state:
     | state(tape-left, current, tape-right) =>
-      cases(List) tape-right:
+      cases(List<option<T.Tokens>>) tape-right:
         | link(f, r) => 
-          some(state(link(current, tape-left), f, r))
-        | empty => none
+          state(link(current, tape-left), f, r)
+        | empty => raise("shift right beyond tape")
       end
   end
 end
@@ -48,8 +48,8 @@ check:
   base = state([list: some(2), some(1)], some(3), [list: some(4), some(5)])
 
   first = shift-r(base)
-  first is some(state([list: some(3), some(2), some(1)], 
+  first is state([list: some(3), some(2), some(1)], 
                          some(4), 
-                         [list: some(5)]))
-  # shift-r(shift-r(shift-r(base))) is none
+                         [list: some(5)])
+  shift-r(shift-r(shift-r(base))) raises "shift right beyond tape"
 end
