@@ -68,6 +68,16 @@ fun handle-instruction(vm :: VM, t :: T.Token) -> VM:
 
     | vm-end(_) => vm
   end
+where:
+  initial = vm-exec(
+              state(empty, T.Plus, [list: T.Plus]),
+              state(empty, 0, repeat(0, 99))
+            )
+
+  next = handle-instruction(initial, T.Plus)
+
+  current-cell(next) is 1
+
 end
 
 fun current-cell(vm):
