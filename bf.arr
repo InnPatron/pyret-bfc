@@ -1,15 +1,15 @@
 import file("tokens.arr") as T
 
 data VM:
-  | vm-exec(instr :: State, cells :: State)
-  | vm-end(cells)
+  | vm-exec(instr :: State<T.Token>, cells :: State<Number>)
+  | vm-end(cells :: State<Number>)
 end
 
-data State:
-  | state(tape-left, current, tape-right)
+data State<a>:
+  | state(tape-left :: List<a>, current :: a, tape-right :: List<a>)
 end
 
-fun step(vm):
+fun step(vm) -> VM:
   cases(VM) vm:
     | vm-exec(instr, cells) => 
       curr-instr = get-current(instr)
@@ -37,10 +37,10 @@ where:
   current-cell(next) is 1
 end
 
-fun handle-instruction(vm, t):
+fun handle-instruction(vm :: VM, t :: T.Token) -> VM:
   cases(VM) vm:
     | vm-exec(instr, cells) =>
-      new-cells = cases(T.Tokens) t:
+      new-cells :: State<Number> = cases(T.Token) t:
         | AngleBracketOpen => shift-l(cells)
         | AngleBracketClosed => shift-r(cells)
         | Plus => apply-to-current(cells, lam(c): c + 1 end)
