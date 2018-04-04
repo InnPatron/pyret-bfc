@@ -12,6 +12,12 @@ fun handle-instruction(s, t):
   end
 end
 
+fun apply-to-cell(s :: VM, f) -> VM:
+  cases(VM) s:
+    | state(tl, c, tr) => state(tl, f(c), tr)
+  end
+end
+
 fun shift-l(old-state :: VM) -> VM:
   cases(VM) old-state:
     | state(tape-left, current, tape-right) =>
