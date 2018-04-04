@@ -14,6 +14,8 @@ fun handle-instruction(s, t):
   cases(T.Tokens) t:
     | AngleBracketOpen => shift-l(s)
     | AngleBracketClosed => shift-r(s)
+    | Plus => apply-to-current(lam(c): c + 1 end)
+    | Minus => apply-to-current(lam(c): c - 1 end)
     | else => s
   end
 end
