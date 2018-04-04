@@ -1,39 +1,48 @@
 import file("tokens.arr") as T
 
 data VM:
+  | vm-state(instr, cells)
+end
+
+data State:
   | state(tape-left, current, tape-right)
 end
 
-fun get-current(s :: VM):
-  cases(VM) s:
+fun get-current(s :: State):
+  cases(State) s:
     | state(_, c, _) => c
   end
 end
 
-fun handle-instruction(s, t):
-  cases(T.Tokens) t:
-    | AngleBracketOpen => shift-l(s)
-    | AngleBracketClosed => shift-r(s)
-    | Plus => apply-to-current(lam(c): c + 1 end)
-    | Minus => apply-to-current(lam(c): c - 1 end)
-    | Dot =>
-      block:
-        print(get-current(s))
-        s
+fun handle-instruction(vm, t):
+  cases(VM) vm:
+    | vm-state(instr, cells) =>
+      new-cells = cases(T.Tokens) t:
+        | AngleBracketOpen => shift-l(cells)
+        | AngleBracketClosed => shift-r(cells)
+        | Plus => apply-to-current(cells, lam(c): c + 1 end)
+        | Minus => apply-to-current(cells, lam(c): c - 1 end)
+        | Dot =>
+          block:
+            print(get-current(cells))
+            cells
+          end
+        | Comma => raise("no i/o")
+        | else => cells 
       end
-    | Comma => raise("no i/o")
-    | else => s
+
+    vm-state(shift-l(instr), new-cells)
   end
 end
 
-fun apply-to-current(s :: VM, f) -> VM:
-  cases(VM) s:
+fun apply-to-current(s :: State, f) -> State:
+  cases(State) s:
     | state(tl, c, tr) => state(tl, f(c), tr)
   end
 end
 
-fun shift-l(old-state :: VM) -> VM:
-  cases(VM) old-state:
+fun shift-l(old-state :: State) -> State:
+  cases(State) old-state:
     | state(tape-left, current, tape-right) =>
       cases(List) tape-left:
         | link(f, r) => 
@@ -43,8 +52,8 @@ fun shift-l(old-state :: VM) -> VM:
   end
 end
 
-fun shift-r(old-state :: VM) -> VM:
-  cases(VM) old-state:
+fun shift-r(old-state :: State) -> State:
+  cases(State) old-state:
     | state(tape-left, current, tape-right) =>
       cases(List) tape-right:
         | link(f, r) => 
