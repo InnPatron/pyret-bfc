@@ -1,3 +1,7 @@
+provide *
+
+provide-types *
+
 data Token:
   | AngleBracketOpen
   | AngleBracketClosed

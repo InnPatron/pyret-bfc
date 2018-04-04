@@ -1,8 +1,8 @@
 .PHONY: clean
 
 
-build:	tokens.arr
-	pyret tokens.arr
+build:	tokens.arr bf.arr
+	pyret tokens.arr bf.arr
 
 clean:
 	rm ./*.jarr
