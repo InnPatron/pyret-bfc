@@ -102,6 +102,13 @@ fun apply-to-current(s :: State, f) -> State:
   cases(State) s:
     | state(tl, c, tr) => state(tl, f(c), tr)
   end
+
+where:
+  base = state(empty, 5, empty)
+
+  first = apply-to-current(base, lam(x): x + 1 end)
+  get-current(first) is 6
+  get-current(base) is 5
 end
 
 fun shift-l(old-state :: State) -> State:
