@@ -72,12 +72,26 @@ fun is-end(s :: State):
   cases(State) s:
     | state(_, _, tr) => tr.length() == 0
   end
+
+where:
+  first = state(empty, 0, empty)
+  is-end(first) is true
+
+  second = state([list: 1], 0, empty)
+  is-end(second) is true
+
+  third = state(empty, 0, [list: 1])
+  is-end(third) is false
 end
 
 fun get-current<a>(s :: State<a>) -> a:
   cases(State) s:
     | state(_, c, _) => c
   end
+
+where:
+  base = state(empty, 100, empty)
+  get-current(base) is 100
 end
 
 fun jump-forward-to-closed(s):
