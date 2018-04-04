@@ -1,7 +1,7 @@
 import file("tokens.arr") as T
 
 data VM:
-  | vm-exec(instr :: State<T.Token>, cells :: State<Number>)
+  | vm-exec(instr :: State<option<T.Token>>, cells :: State<Number>)
   | vm-end(cells :: State<Number>)
 end
 
@@ -9,12 +9,12 @@ data State<a>:
   | state(tape-left :: List<a>, current :: a, tape-right :: List<a>)
 end
 
-fun step(vm) -> VM:
+fun step(vm :: VM) -> VM:
   cases(VM) vm:
-    | vm-exec(instr, cells) => 
-      curr-instr = get-current(instr)
-      cases(option) curr-instr:
-        | some(t) => handle-instruction(vm, t)
+    | vm-exec(instr :: State<option<T.Token>>, cells :: State<Number>) => 
+      curr-instr :: option<T.Token> = get-current<option<T.Token>>(instr)
+      cases(option<T.Token>) curr-instr:
+        | some(t :: T.Token) => handle-instruction(vm, t)
 
         | none =>
           if is-end(instr) == false:
@@ -74,7 +74,7 @@ fun is-end(s :: State):
   end
 end
 
-fun get-current(s :: State):
+fun get-current<a>(s :: State<a>) -> a:
   cases(State) s:
     | state(_, c, _) => c
   end
