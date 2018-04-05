@@ -12,7 +12,11 @@ end
 fun step(vm :: VM) -> VM:
   cases(VM) vm:
     | vm-exec(instr :: State<option<T.Token>>, cells :: State<Number>) => 
+
       curr-instr :: option<T.Token> = get-current<option<T.Token>>(instr)
+      
+      raise("hell")
+#|
       cases(option<T.Token>) curr-instr:
         | some(t :: T.Token) => handle-instruction(vm, t)
 
@@ -23,6 +27,7 @@ fun step(vm :: VM) -> VM:
             vm-end(cells)
           end
       end
+|#
     | vm-end(cells) => vm-end(cells)
   end
 where:
